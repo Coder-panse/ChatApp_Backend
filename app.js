@@ -3,7 +3,7 @@ import connect from "./db/database.js";
 import express from "express"
 import cors from "cors";
 import userRoute from "./routes/user.route.js";
-import contactRoute from "./routes/Contact.route.js";
+import contactRoute from "./routes/contact.route.js";
 import messageRoute from "./routes/message.route.js";
 import cookieParser from "cookie-parser";
 
