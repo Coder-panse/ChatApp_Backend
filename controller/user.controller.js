@@ -23,11 +23,7 @@ export const Signup = async (req, res) => {
 
         res
           .status(200)
-          .cookie("userToken", userToken, {
-            httpOnly: true,
-            secure: true, // if using HTTPS on Render
-            sameSite: "none", // important for Render cross-site cookies
-          })
+          .cookie("userToken", userToken)
           .json({ user });
       });
     });
