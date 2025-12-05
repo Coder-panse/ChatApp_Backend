@@ -1,23 +1,27 @@
-import { error } from "console"
-import jwt from "jsonwebtoken"
-import User from "../models/user.model.js"
+import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
-export const isLoggedIn=async (req,res,next)=>{
-    if(!req.cookies.userToken) res.send("/login")
-    if(req.cookies.userToken == "") res.send("/login")
+export const isLoggedIn = async (req, res, next) => {
+  if (!req.cookies.userToken) return res.send("/login");
+  if (req.cookies.userToken == "") return res.send("/login");
+  else {
+    try {
+        const token = req.cookies.userToken;
+      // Verify token
+      const decoded = jwt.verify(token, "secret");
 
-        else{
-           jwt.verify(req.cookies.userToken,"secret",async(error,result)=>{
-                if(result){
-                    const userId=await User.findOne({email:result.email})
-                    req.user=userId
-                    next()
-                }
-                else{
-                    console.log(error)
-                    res.status(400).json({msg:"Unauthorised User"})
-                }
-           })
-           
-        }
-}
+      // Find user
+      const user = await User.findOne({ email: decoded.email });
+
+      if (!user) {
+        return res.status(401).json({ msg: "User does not exist" });
+      }
+
+      req.user = user;
+      return next();
+    } catch (err) {
+      console.log(err);
+      return res.status(401).json({ msg: "Unauthorized User" });
+    }
+  }
+};
