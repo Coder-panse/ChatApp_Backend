@@ -22,7 +22,7 @@ export const Signup = async (req, res) => {
         });
         const userToken = jwt.sign({ email }, "secret");
 
-        res
+       return res
           .status(200)
           .cookie("userToken", userToken, {
             httpOnly: true,
@@ -49,7 +49,14 @@ export const Login = async (req, res) => {
 
       const userToken = jwt.sign({ email }, "secret");
 
-      return res.status(200).cookie("userToken", userToken).json({ user });
+      return res
+          .status(200)
+          .cookie("userToken", userToken, {
+            httpOnly: true,
+            secure: true, // if using HTTPS on Render
+            sameSite: "none", // important for Render cross-site cookies
+          })
+          .json({ user });
     });
   } catch (error) {
     return res.status(400).json({ msg: "Failed" });
