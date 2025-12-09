@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const Signup = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password,contactNo } = req.body;
     const image = req.file.filename;
 
     const user = await User.findOne({ email });
@@ -15,6 +15,7 @@ export const Signup = async (req, res) => {
       bcrypt.hash(password, salt, async (err, hash) => {
         const user = await User.create({
           username,
+          contactNo,
           email,
           password: hash,
           image,
